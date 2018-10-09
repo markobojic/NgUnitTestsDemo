@@ -45,4 +45,23 @@ describe('Heroes component (Deep test)', () => {
       expect(heroComponentDEs[i].componentInstance.hero).toBe(HEROES[i]);
     }
   });
+
+  it('should call heroService.deleteHero when the Hero Components delete button is clicked', () => {
+    spyOn(fixture.componentInstance, 'delete');
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+    // trigger button click in child component
+    // heroComponents[0].query(By.css('button')).triggerEventHandler('click', {stopPropagation: () => {}});
+
+    // just emit event in child component
+    (<HeroComponent>heroComponents[0].componentInstance).delete.emit();
+
+    // trigger event handler from debug element
+    // heroComponents[0].triggerEventHandler('delete', null);
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+  });
 });
